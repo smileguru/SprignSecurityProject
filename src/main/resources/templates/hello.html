@@ -6,6 +6,11 @@
 </head>
 <body>
     Hello world!
-    <a href="/logout">logout</a>
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="logout">
+    </form>
+<!--    ТК мы включили csrf-token мы не можем
+        разлогиниться с помощью пост запроса-->
+<!--    <a href="/logout">logout</a>-->
 </body>
 </html>

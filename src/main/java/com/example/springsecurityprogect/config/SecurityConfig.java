@@ -27,17 +27,19 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((request) -> request
+        http.authorizeHttpRequests((request) -> request
+                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/auth/login","/auth/registration", "/error").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin((form) -> form
+                        .anyRequest().hasAnyRole("USER", "ADMIN")
+                ).formLogin((form) -> form
                         .loginPage("/auth/login").permitAll()
                         .loginProcessingUrl("/process_login")
                         .defaultSuccessUrl("/hello", true)
-                        .failureUrl("/auth/login?error=true"))
-                .logout(LogoutConfigurer::permitAll);
-        return http.csrf(AbstractHttpConfigurer::disable).build();
+                        .failureUrl("/auth/login?error=true")
+                ).logout(LogoutConfigurer::permitAll);
+        //Выключен _csrf token -> disable
+//        return http.csrf(AbstractHttpConfigurer::disable).build();
+        return http.build();
     }
 
     @Bean
